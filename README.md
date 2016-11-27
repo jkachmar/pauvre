@@ -1,8 +1,10 @@
 # pauvre
 
-A small playground for trying to minimize container sizes for practical 
-Haskell projects. A Servant API using Persistant as the driver for a Postgres
-database was arbitrarily chosen as a sufficiently complex project to test.
+An example Servant application using Persistant as the database driver and
+Postgres as the backend data store.
+
+For maximum portability, the project can be built into a minimal Docker image
+(~30 MB at the time of writing) using the steps below.
 
 ## Development
 
