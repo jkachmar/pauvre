@@ -38,12 +38,12 @@ regionServer =
   :<|> buildingsFromRegionId
 
 allRegions :: HandlerM [Entity Region]
-allRegions = runReadOnly (selectList [] [])
+allRegions = runDbRead (selectList [] [])
 
 buildingsFromRegionId :: RegionParamId -> HandlerM [Entity Building]
 buildingsFromRegionId (RegionParamId regionId) = do
-  buildings <- runReadOnly (selectList
-                            [BuildingRegionId ==. (Just $ toSqlKey regionId)]
-                            [])
+  buildings <- runDbRead (selectList
+                          [BuildingRegionId ==. (Just $ toSqlKey regionId)]
+                          [])
 
   if (null buildings) then throwError err404 else pure buildings

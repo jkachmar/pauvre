@@ -52,12 +52,12 @@ printMigrations = printMigration migrateAll
 
 --------------------------------------------------------------------------------
 
-runReadOnly
+runDbRead
   :: ( MonadReader Config m
      , MonadIO m
      )
   => SqlReadT IO b
   -> m b
-runReadOnly query = do
+runDbRead query = do
   pool <- asks getPool
   liftIO $ runSqlPool query pool

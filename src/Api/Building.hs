@@ -38,12 +38,12 @@ buildingServer =
   :<|> tenantsFromBuildingId
 
 allBuildings :: HandlerM [Entity Building]
-allBuildings = runReadOnly (selectList [] [])
+allBuildings = runDbRead (selectList [] [])
 
 tenantsFromBuildingId :: BuildingParamId -> HandlerM [Entity Tenant]
 tenantsFromBuildingId (BuildingParamId buildingId) = do
-  tenants <- runReadOnly (selectList
-                          [TenantBuildingId ==. (Just $ toSqlKey buildingId)]
-                          [])
+  tenants <- runDbRead (selectList
+                        [TenantBuildingId ==. (Just $ toSqlKey buildingId)]
+                        [])
 
   if (null tenants) then throwError err404 else pure tenants

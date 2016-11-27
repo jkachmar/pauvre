@@ -38,11 +38,11 @@ tenantServer =
   :<|> tenantFromId
 
 allTenants :: HandlerM [Entity Tenant]
-allTenants = runReadOnly (selectList [] [])
+allTenants = runDbRead (selectList [] [])
 
 tenantFromId :: TenantParamId -> HandlerM (Entity Tenant)
 tenantFromId (TenantParamId tenantId) = do
-  tenant <-  runReadOnly (selectFirst
-                          [TenantId ==. toSqlKey tenantId]
-                          [])
+  tenant <-  runDbRead (selectFirst
+                        [TenantId ==. toSqlKey tenantId]
+                        [])
   maybe (throwError err404) (pure) tenant
