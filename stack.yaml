@@ -3,7 +3,12 @@ resolver: lts-7.10
 packages:
 - '.'
 
-extra-deps: []
+extra-deps:
+- aeson-1.0.2.1
+- servant-0.9.1.1
+- servant-server-0.9.1.1
+- servant-docs-0.9.1.1
+- http-api-data-0.3.2
 
 flags: {}
 
