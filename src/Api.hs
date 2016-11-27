@@ -8,6 +8,7 @@ import           Servant
 
 import           Api.Building
 import           Api.Region
+import           Api.Tenant
 
 import           Config
 
@@ -16,6 +17,7 @@ import           Config
 type Api =
        BuildingApi
   :<|> RegionApi
+  :<|> TenantApi
 
 api :: Proxy Api
 api = Proxy
@@ -24,6 +26,7 @@ apiServer :: ServerT Api HandlerM
 apiServer =
        buildingServer
   :<|> regionServer
+  :<|> tenantServer
 
 --------------------------------------------------------------------------------
 

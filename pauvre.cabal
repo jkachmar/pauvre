@@ -19,6 +19,7 @@ library
   hs-source-dirs:      src
   other-modules:       Api.Building
                      , Api.Region
+                     , Api.Tenant
                      , Model
   exposed-modules:     Api
                      , Config
