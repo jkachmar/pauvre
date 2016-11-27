@@ -4,23 +4,26 @@
 
 module Api where
 
-import Servant
+import           Servant
 
-import Api.Building
+import           Api.Building
+import           Api.Region
 
-import Config
+import           Config
 
 --------------------------------------------------------------------------------
 
 type Api =
-  BuildingApi
+       BuildingApi
+  :<|> RegionApi
 
 api :: Proxy Api
 api = Proxy
 
 apiServer :: ServerT Api HandlerM
 apiServer =
-  buildingServer
+       buildingServer
+  :<|> regionServer
 
 --------------------------------------------------------------------------------
 
