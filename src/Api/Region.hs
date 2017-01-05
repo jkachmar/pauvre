@@ -12,18 +12,17 @@ import           Database.Persist.Postgresql
 import           GHC.Generics                (Generic)
 import           Servant
 
+import           Api.Common
 import           Config
 import           Model
 
 --------------------------------------------------------------------------------
 
-type RegionApi = "region" :> RegionApi'
-
-type RegionApi' =
-  Get '[JSON] [Entity Region]
-
-  :<|> Capture "region_id" RegionParamId
-    :> Get '[JSON] [Entity Building]
+type RegionApi =
+  "region" :> SelectAll Region
+  :<|>
+  "region" :> Capture "region_id" RegionParamId
+           :> Get '[JSON] [Entity Building]
 
 --------------------------------------------------------------------------------
 
@@ -34,16 +33,18 @@ newtype RegionParamId = RegionParamId Int64
 
 regionServer :: ServerT RegionApi HandlerM
 regionServer =
-       allRegions
+       selectAll
   :<|> buildingsFromRegionId
 
-allRegions :: HandlerM [Entity Region]
-allRegions = runDbRead (selectList [] [])
+--------------------------------------------------------------------------------
 
 buildingsFromRegionId :: RegionParamId -> HandlerM [Entity Building]
 buildingsFromRegionId (RegionParamId regionId) = do
-  buildings <- runDbRead (selectList
-                          [BuildingRegionId ==. (Just $ toSqlKey regionId)]
-                          [])
+  buildings <-
+    runDbRead (selectList
+                [BuildingRegionId ==. (Just $ toSqlKey regionId)]
+                [])
 
-  if (null buildings) then throwError err404 else pure buildings
+  case buildings of
+    [] -> throwError err404
+    _  -> pure buildings

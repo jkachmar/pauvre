@@ -12,18 +12,17 @@ import           Database.Persist.Postgresql
 import           GHC.Generics                (Generic)
 import           Servant
 
+import           Api.Common
 import           Config
 import           Model
 
 --------------------------------------------------------------------------------
 
-type BuildingApi = "building" :> BuildingApi'
-
-type BuildingApi' =
-  Get '[JSON] [Entity Building]
-
-  :<|> Capture "building_id" BuildingParamId
-    :> Get '[JSON] [Entity Tenant]
+type BuildingApi =
+  "building" :> SelectAll Building
+  :<|>
+  "building" :> Capture "building_id" BuildingParamId
+             :> Get '[JSON] [Entity Tenant]
 
 --------------------------------------------------------------------------------
 
@@ -34,16 +33,18 @@ newtype BuildingParamId = BuildingParamId Int64
 
 buildingServer :: ServerT BuildingApi HandlerM
 buildingServer =
-       allBuildings
+       selectAll
   :<|> tenantsFromBuildingId
 
-allBuildings :: HandlerM [Entity Building]
-allBuildings = runDbRead (selectList [] [])
+--------------------------------------------------------------------------------
 
 tenantsFromBuildingId :: BuildingParamId -> HandlerM [Entity Tenant]
 tenantsFromBuildingId (BuildingParamId buildingId) = do
-  tenants <- runDbRead (selectList
-                        [TenantBuildingId ==. (Just $ toSqlKey buildingId)]
-                        [])
+  tenants <-
+    runDbRead (selectList
+                [TenantBuildingId ==. (Just $ toSqlKey buildingId)]
+                [])
 
-  if (null tenants) then throwError err404 else pure tenants
+  case tenants of
+    [] -> throwError err404
+    _  -> pure tenants

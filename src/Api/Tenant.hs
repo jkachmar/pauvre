@@ -12,18 +12,17 @@ import           Database.Persist.Postgresql
 import           GHC.Generics                (Generic)
 import           Servant
 
+import           Api.Common
 import           Config
 import           Model
 
 --------------------------------------------------------------------------------
 
-type TenantApi = "tenant" :> TenantApi'
-
-type TenantApi' =
-  Get '[JSON] [Entity Tenant]
-
-  :<|> Capture "tenant_id" TenantParamId
-    :> Get '[JSON] (Entity Tenant)
+type TenantApi =
+  "tenant" :> SelectAll Tenant
+  :<|>
+  "tenant" :> Capture "tenant_id" TenantParamId
+           :> Get '[JSON] (Entity Tenant)
 
 --------------------------------------------------------------------------------
 
@@ -34,15 +33,14 @@ newtype TenantParamId = TenantParamId Int64
 
 tenantServer :: ServerT TenantApi HandlerM
 tenantServer =
-       allTenants
+       selectAll
   :<|> tenantFromId
-
-allTenants :: HandlerM [Entity Tenant]
-allTenants = runDbRead (selectList [] [])
 
 tenantFromId :: TenantParamId -> HandlerM (Entity Tenant)
 tenantFromId (TenantParamId tenantId) = do
-  tenant <-  runDbRead (selectFirst
-                        [TenantId ==. toSqlKey tenantId]
-                        [])
+  tenant <-
+    runDbRead (selectFirst
+               [TenantId ==. toSqlKey tenantId]
+               [])
+
   maybe (throwError err404) (pure) tenant
