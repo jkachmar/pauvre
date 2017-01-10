@@ -73,7 +73,7 @@ makePool Production  = do
 
   case pool of
     Nothing ->
-      throwIO $ userError "Database configuration variables not preesent in the environment."
+      throwIO $ userError "Database configuration variables not present in the environment."
     Just a ->
       pure a
 

@@ -13,13 +13,15 @@ import           GHC.Generics                (Generic)
 import           Servant
 
 import           Api.Common
-import           Config
+import           Config                      (HandlerM)
 import           Model
 
 --------------------------------------------------------------------------------
 
 type RegionApi =
   "region" :> SelectAll Region
+  :<|>
+  "region" :> SelectById "region_id" Region
   :<|>
   "region" :> Capture "region_id" RegionParamId
            :> Get '[JSON] [Entity Building]
@@ -34,6 +36,7 @@ newtype RegionParamId = RegionParamId Int64
 regionServer :: ServerT RegionApi HandlerM
 regionServer =
        selectAll
+  :<|> selectById
   :<|> buildingsFromRegionId
 
 --------------------------------------------------------------------------------

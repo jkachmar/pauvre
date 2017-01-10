@@ -21,9 +21,9 @@ library
                      , Api.Common
                      , Api.Region
                      , Api.Tenant
-                     , Model
   exposed-modules:     Api
                      , Config
+                     , Model
   build-depends:       base                  >= 4.7 && < 5
                      , aeson                 >= 1.0
                      , bytestring            >= 0.10

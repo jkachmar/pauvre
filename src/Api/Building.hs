@@ -12,8 +12,8 @@ import           Database.Persist.Postgresql
 import           GHC.Generics                (Generic)
 import           Servant
 
-import           Api.Common
-import           Config
+import           Api.Common                  (SelectById, SelectAll, selectAll, selectById)
+import           Config                      (HandlerM)
 import           Model
 
 --------------------------------------------------------------------------------
@@ -21,7 +21,10 @@ import           Model
 type BuildingApi =
   "building" :> SelectAll Building
   :<|>
-  "building" :> Capture "building_id" BuildingParamId
+  "building" :> SelectById "building_id" Building
+  :<|>
+  "building" :> "tenant"
+             :> Capture "building_id" BuildingParamId
              :> Get '[JSON] [Entity Tenant]
 
 --------------------------------------------------------------------------------
@@ -34,6 +37,7 @@ newtype BuildingParamId = BuildingParamId Int64
 buildingServer :: ServerT BuildingApi HandlerM
 buildingServer =
        selectAll
+  :<|> selectById
   :<|> tenantsFromBuildingId
 
 --------------------------------------------------------------------------------

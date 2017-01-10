@@ -6,12 +6,16 @@ import           System.Environment       (lookupEnv)
 
 import           Api                      (app)
 import           Config
+import           Model                    (doMigrations)
 
 main :: IO ()
 main = do
   env  <- lookupSetting "ENV" Development
   port <- lookupSetting "PORT" 8081
   pool <- makePool env
+
+  -- Run migrations (safely!) on the given pool
+  doMigrations pool
 
   let cfg = Config { getPool = pool, getEnv = env }
       logger = setLogger env

@@ -14,7 +14,7 @@ module Model where
 
 import           Control.Monad.Reader (MonadIO, MonadReader, asks, liftIO)
 import           Data.Text            (Text)
-import           Database.Persist.Sql (SqlPersistT, SqlReadT, printMigration,
+import           Database.Persist.Sql (ConnectionPool, SqlReadT, printMigration,
                                        runMigration, runSqlPool)
 import           Database.Persist.TH
 
@@ -44,11 +44,11 @@ Tenant json sql=tenants
 
 --------------------------------------------------------------------------------
 
-doMigrations :: SqlPersistT IO ()
-doMigrations = runMigration migrateAll
+doMigrations :: ConnectionPool -> IO ()
+doMigrations = runSqlPool (runMigration migrateAll)
 
-printMigrations :: SqlPersistT IO ()
-printMigrations = printMigration migrateAll
+printMigrations :: ConnectionPool -> IO ()
+printMigrations = runSqlPool (printMigration migrateAll)
 
 --------------------------------------------------------------------------------
 

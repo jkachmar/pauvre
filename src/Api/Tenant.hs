@@ -12,14 +12,17 @@ import           Database.Persist.Postgresql
 import           GHC.Generics                (Generic)
 import           Servant
 
-import           Api.Common
-import           Config
+import           Api.Common                  (SelectAll, SelectById, selectAll,
+                                              selectById)
+import           Config                      (HandlerM)
 import           Model
 
 --------------------------------------------------------------------------------
 
 type TenantApi =
   "tenant" :> SelectAll Tenant
+  :<|>
+  "tenant" :> SelectById "tenant_id" Tenant
   :<|>
   "tenant" :> Capture "tenant_id" TenantParamId
            :> Get '[JSON] (Entity Tenant)
@@ -34,6 +37,7 @@ newtype TenantParamId = TenantParamId Int64
 tenantServer :: ServerT TenantApi HandlerM
 tenantServer =
        selectAll
+  :<|> selectById
   :<|> tenantFromId
 
 tenantFromId :: TenantParamId -> HandlerM (Entity Tenant)
