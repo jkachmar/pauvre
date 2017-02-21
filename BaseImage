@@ -1,15 +1,7 @@
 # Use Alpine Linux as base image
-FROM alpine:latest
+FROM mitchty/alpine-ghc:8.0.2
 
-# Add mitchty's keys
-ADD https://raw.githubusercontent.com/mitchty/alpine-ghc/master/mitch.tishmack%40gmail.com-55881c97.rsa.pub \
-    /etc/apk/keys/mitch.tishmack@gmail.com-55881c97.rsa.pub
-
-# Add mitchty's GHC 'repo'
-RUN echo "https://s3-us-west-2.amazonaws.com/alpine-ghc/8.0" >> /etc/apk/repositories
-
-RUN  echo "http://dl-6.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories \
-  && echo "@edge http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
+RUN  echo "@edge http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
 
 # Update packages and install dependencies
 RUN apk update && apk add \
@@ -22,7 +14,7 @@ RUN apk update && apk add \
     shadow@edge # Required for stack's 'usermod' and 'groupmod' invocations
 
 # Grab a recent binary of Stack
-ADD https://s3.amazonaws.com/static-stack/stack-1.1.2-x86_64 /usr/local/bin/stack
+ADD https://www.stackage.org/stack/linux-x86_64-static /usr/local/bin/stack
 RUN chmod 755 /usr/local/bin/stack
 
 # Install project-specific dependencies

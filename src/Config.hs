@@ -3,7 +3,6 @@
 module Config where
 
 import           Control.Exception                    (throwIO)
-import           Control.Monad.Except                 (ExceptT)
 import           Control.Monad.Logger                 (runNoLoggingT,
                                                        runStdoutLoggingT)
 import           Control.Monad.Reader                 (ReaderT)
@@ -21,7 +20,7 @@ import           System.Environment                   (lookupEnv)
 -- | HandlerM type encapsulating the context the API will operate within
 -- The standard 'ExceptT ServantErr IO' stack is wrapped in a 'ReaderT' to
 -- provide Environment and Database information throughout the app.
-type HandlerM = ReaderT Config (ExceptT ServantErr IO)
+type HandlerM = ReaderT Config Handler
 
 --------------------------------------------------------------------------------
 
