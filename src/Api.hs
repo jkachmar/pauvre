@@ -30,8 +30,8 @@ apiServer =
 
 --------------------------------------------------------------------------------
 
-enterServer :: Config -> Server Api
-enterServer cfg = enter (runReaderTNat cfg) apiServer
-
 app :: Config -> Application
-app cfg = serve api $ enterServer cfg
+app cfg = serve api $ readerServer cfg
+
+readerServer :: Config -> Server Api
+readerServer cfg = enter (runReaderTNat cfg) apiServer

@@ -1,16 +1,19 @@
-resolver: lts-8.2
+resolver: lts-8.4
 
 packages:
 - '.'
 
 extra-deps:
-- servant-0.10
-- servant-server-0.10
-- servant-docs-0.10
+  - composite-aeson-0.1.0.0
+  - composite-base-0.1.0.0
+  - composite-opaleye-0.1.0.0
+  - servant-0.10
+  - servant-server-0.10
+  - servant-docs-0.10
 
 flags: {}
 
 extra-package-dbs: []
 
-docker:
-  enable: true
+# docker:
+#   enable: true

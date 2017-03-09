@@ -86,7 +86,7 @@ envPool Production  = 5
 
 -- | Simple connection string for development work
 devConnStr :: ConnectionString
-devConnStr = "host=localhost dbname=pauvre user=pauvre password= port=5432"
+devConnStr = "host=localhost dbname=pauvre user=jkachmar password= port=5432"
 
 -- | Simple connection string for testing
 testConnStr :: ConnectionString

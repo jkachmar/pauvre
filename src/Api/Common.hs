@@ -8,7 +8,7 @@ module Api.Common where
 import           Control.Monad.Error.Class (MonadError)
 import           Control.Monad.Reader      (MonadIO, MonadReader)
 import           Data.Int                  (Int64)
-import           Database.Persist.Sql      (Entity, Filter, PersistEntity,
+import           Database.Persist.Sql      (Entity, PersistEntity,
                                             PersistEntityBackend, SqlBackend,
                                             ToBackendKey, get, selectList,
                                             toSqlKey)
